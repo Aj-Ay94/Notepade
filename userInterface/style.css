@@ -1,0 +1,108 @@
+:root {
+    --heading: rgb(9, 9, 71);
+    --heading-btn: transparent;
+    --heading-text: rgb(245, 236, 236);
+    --ho-line: rgb(153, 148, 148);
+    --ve-line: rgb(211, 55, 94);
+    --line-height: 28px;
+    --paper: rgb(243, 243, 79);
+    --paper-ink: rgb(61, 4, 61);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0px;
+}
+
+body{
+    display: flex;
+    flex-direction: column;
+    background: var(--paper);
+    color: var(--paper-ink);
+}
+
+[hidden] {
+    display: none !important;
+}
+
+header {
+    height: 36px;
+    background-color: var(--heading);
+    color: var(--heading-text);
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+#heading{
+    margin-left: 10px;
+    font-size: 1.5rem;
+    flex: 1;
+}
+
+#status {
+    font-size: 1.1rem;
+    flex: 1;
+}
+
+
+
+.btn{
+    border: 1px solid black;
+    border-radius: 8px;
+    padding: 0px 6px;
+    font-size: 16px;
+    height: 34px;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+#heading{
+    left: 30px;
+    top: 30px;
+}
+
+#viewItem{
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+}
+
+#itemName{
+    width: 100%;
+    flex: none;
+    border: 0;
+    border-radius: 4px;
+    padding: 0px 5px;
+    height: 40px;
+    font-weight: bold;
+    font-size: 1.6rem;
+    background: transparent;
+}
+
+#itemContent{
+    width: 100%;
+    resize: none;
+    flex: 1;
+    border: 0;
+    margin: 0;
+    font-size: 1.2rem;
+    color: var(--paper-ink);
+    padding: 0px 5px 0px 50px;
+    line-height: var(--line-height);
+    background-color: transparent;
+    background-image: linear-gradient(to right, transparent 47px, var(--ve-line) 48px, transparent 48px),
+                repeating-linear-gradient(to bottom,transparent 0px, transparent calc(var(--line-height) - 1px), var(--ho-line) calc(var(--line-height) - 1px), var(--ho-line) calc(var(--line-height)));
+    background-attachment: local;
+}
+
+#itemName:focus-visible,#itemContent:focus-visible{
+    outline: 2px solid var(--ve-line);
+    outline-offset: -2px;
+}
