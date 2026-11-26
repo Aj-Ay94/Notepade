@@ -5,18 +5,20 @@ const viewItem = $("viewItem");
 const heading = $("heading");
 const backBtn = $("backBtn");
 const status = $("status");
-const theme = $("dark-light");
+const themeBtn = $("dark-light");
 const newNote = $("newNote");
 const deleteBtn = $("delete");
 const itemName = $("itemName");
 const itemContent = $("itemContent");
 const topics = $("topics");
 const empty = $("empty");
+const html = document.documentElement;
 
 
 let notes = [];
 let current = null;
 let KEY = "notepad-notes";
+let theme = "theme";
 let timer;
 
 const load =()=>{
@@ -38,6 +40,28 @@ const save =()=>{
     }
 }
 
+try{
+    html.dataset.theme = localStorage.getItem(theme);
+}catch(e){
+    status.textContent = "Theme not loaded";
+}
+
+themeBtn.addEventListener("click",()=>{
+    const currentTheme = html.dataset.theme || (matchMedia("prefers-color-scheme: dark").matches? "dark":"light");
+    html.dataset.theme = currentTheme === "dark"? "light":"dark";
+    if(html.dataset.theme === "dark"){
+        themeBtn.textContent = "Light";
+    }else{
+        themeBtn.textContent = "Dark";
+    }
+
+    try{
+        localStorage.setItem(theme,html.dataset.theme);
+    }catch(e){
+        status.textContent = "Theme could not be saved";
+    }
+});
+
 const renderNotes =()=>{
     topics.innerHTML = "";
     const sorted = [...notes].sort((a,b)=>b.updated-a.updated);
@@ -53,7 +77,7 @@ const renderNotes =()=>{
         t.textContent = n.title.trim()||"Untitled";
 
         const p = document.createElement("span");
-        p.textContent = n.body.trim().split("/n")[0]||"No content";
+        p.textContent = n.body.trim().split("\n")[0]||"No content";
 
         const d = document.createElement("small");
         d.textContent = new Date(n.updated).toLocaleString([],{
@@ -62,10 +86,24 @@ const renderNotes =()=>{
         });
 
         btn.append(t,p,d);
-        btn.addEventListener("click",openNote(n.id));
+        btn.addEventListener("click",()=>openNote(n.id));
         li.appendChild(btn);
         topics.appendChild(li);
     }
+}
+
+const showList =()=>{
+    clearTimeout(timer);
+    flush();
+    current = null;
+    viewItem.hidden = true;
+    listNotes.hidden = false;
+    heading.textContent = "Notes";
+    backBtn.hidden = true;
+    status.textContent = "saved";
+    newNote.hidden = false;
+    deleteBtn.hidden = true;
+    renderNotes();
 }
 
 const openNote =(id)=>{
@@ -107,10 +145,23 @@ const queueSave =()=>{
 itemName.addEventListener("input",queueSave);
 itemContent.addEventListener("input",queueSave);
 newNote.addEventListener("click", createNote);
-backBtn.addEventListener("click",()=>{
+backBtn.addEventListener("click",showList);
 
+deleteBtn.addEventListener("click",()=>{
+    notes.pop(current);
+    current = null;
+    listNotes.hidden = false;
+    viewItem.hidden = true;
+    backBtn.hidden = true;
+    deleteBtn.hidden = true;
+    newNote.hidden = false;
+    status.textContent = "saved";
+    heading.textContent = "Notes";
+    save();
+    renderNotes();
 })
 
-
+window.addEventListener("pagehide",flush);
 
 load();
+renderNotes();
